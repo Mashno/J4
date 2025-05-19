@@ -4,6 +4,11 @@
 
 package com.mycompany.j4;
 
+import java.io.PrintStream;
+import java.io.UnsupportedEncodingException;
+import java.sql.Connection;
+import javax.swing.SwingUtilities;
+
 /**
  *
  * @author Владислав
@@ -11,6 +16,15 @@ package com.mycompany.j4;
 public class J4 {
 
     public static void main(String[] args) {
-        System.out.println("Hello World!");
+        
+        try {
+        System.setOut(new PrintStream(System.out, true, "UTF-8"));
+        System.setErr(new PrintStream(System.err, true, "UTF-8"));
+        SwingUtilities.invokeLater(() -> new MainFrame());
+    } catch (UnsupportedEncodingException e) {
+        e.printStackTrace();
     }
-}
+    }
+    }
+
+
