@@ -14,16 +14,17 @@ import java.sql.SQLException;
 
 public class StickFactory {
 
-    // Создать новую палочку
     public static void createMagicStick(int coreId, int woodId, double price) {
-        String sql = "INSERT INTO MagicStick(core_id, wood_id, price) VALUES(?, ?, ?)";
+        String sql = "INSERT INTO MagicStick(core_id, wood_id, price, status, buyer) VALUES(?, ?, ?, 'available', NULL)";
         try (Connection conn = DatabaseConnection.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
             pstmt.setInt(1, coreId);
             pstmt.setInt(2, woodId);
             pstmt.setDouble(3, price);
             pstmt.executeUpdate();
-            System.out.println("✨ Создана новая палочка: core_id=" + coreId + ", wood_id=" + woodId + ", цена=" + price);
+            System.out.println("✨ Создана новая палочка: core_id=" + coreId + ", wood_id=" + woodId);
+
         } catch (SQLException e) {
             System.err.println("❌ Ошибка при создании палочки:");
             e.printStackTrace();

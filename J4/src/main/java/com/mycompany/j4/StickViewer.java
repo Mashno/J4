@@ -16,7 +16,7 @@ public class StickViewer extends JFrame {
 
     public StickViewer() {
         setTitle("Список волшебных палочек");
-        setSize(700, 400);
+        setSize(800, 500);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
@@ -26,18 +26,33 @@ public class StickViewer extends JFrame {
         try (Connection conn = DatabaseConnection.getConnection();
              Statement stmt = conn.createStatement()) {
 
-            ResultSet rs = stmt.executeQuery(
-                    "SELECT m.id, w.type AS wood, c.type AS core, m.price " +
-                    "FROM MagicStick m " +
-                    "JOIN Wood w ON m.wood_id = w.id " +
-                    "JOIN Core c ON m.core_id = c.id");
+            String sql = """
+                SELECT m.id, w.type AS wood, c.type AS core, 
+                       m.price, m.status, m.buyer
+                FROM MagicStick m
+                JOIN Wood w ON m.wood_id = w.id
+                JOIN Core c ON m.core_id = c.id
+                ORDER BY m.id;
+            """;
 
-            textArea.append("✨ Список палочек:\n\n");
+            ResultSet rs = stmt.executeQuery(sql);
+
+            textArea.append("✨ Список волшебных палочек:\n\n");
+
             while (rs.next()) {
-                textArea.append("ID: " + rs.getInt("id") + "\n");
-                textArea.append("Древесина: " + rs.getString("wood") + "\n");
-                textArea.append("Сердцевина: " + rs.getString("core") + "\n");
-                textArea.append("Цена: " + rs.getDouble("price") + "\n");
+                int id = rs.getInt("id");
+                String wood = rs.getString("wood");
+                String core = rs.getString("core");
+                double price = rs.getDouble("price");
+                String status = rs.getString("status");
+                String buyer = rs.getObject("buyer", String.class); // Может быть NULL
+
+                textArea.append(String.format("ID: %d%n", id));
+                textArea.append(String.format("Древесина: %s%n", wood));
+                textArea.append(String.format("Сердцевина: %s%n", core));
+                textArea.append(String.format("Цена: %.2f%n", price));
+                textArea.append(String.format("Статус: %s%n", status));
+                textArea.append(String.format("Покупатель: %s%n", buyer == null ? "—" : buyer));
                 textArea.append("------------------------\n");
             }
 
@@ -47,5 +62,6 @@ public class StickViewer extends JFrame {
         }
 
         add(new JScrollPane(textArea), BorderLayout.CENTER);
+        setVisible(true);
     }
 }

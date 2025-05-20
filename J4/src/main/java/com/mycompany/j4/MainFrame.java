@@ -45,7 +45,7 @@ public class MainFrame extends JFrame {
 
         btnCheckStock.addActionListener(e -> new StockViewer().setVisible(true));
         btnCreateStick.addActionListener(e -> new CreateStickGUI(MainFrame.this).setVisible(true));
-        btnSellStick.addActionListener(e -> new SellStickDialog(MainFrame.this).setVisible(true));
+        btnSellStick.addActionListener(e -> new SellStickGUI(MainFrame.this).setVisible(true));
         btnViewSticks.addActionListener(e -> new StickViewer().setVisible(true));
         btnClearData.addActionListener(e -> confirmAndClear());
 
