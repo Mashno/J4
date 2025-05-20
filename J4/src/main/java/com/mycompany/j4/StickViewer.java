@@ -37,7 +37,7 @@ public class StickViewer extends JFrame {
 
             ResultSet rs = stmt.executeQuery(sql);
 
-            textArea.append("✨ Список волшебных палочек:\n\n");
+            textArea.append(" Список волшебных палочек:\n\n");
 
             while (rs.next()) {
                 int id = rs.getInt("id");
@@ -45,7 +45,7 @@ public class StickViewer extends JFrame {
                 String core = rs.getString("core");
                 double price = rs.getDouble("price");
                 String status = rs.getString("status");
-                String buyer = rs.getObject("buyer", String.class); // Может быть NULL
+                String buyer = rs.getObject("buyer", String.class);
 
                 textArea.append(String.format("ID: %d%n", id));
                 textArea.append(String.format("Древесина: %s%n", wood));
@@ -57,7 +57,7 @@ public class StickViewer extends JFrame {
             }
 
         } catch (SQLException e) {
-            textArea.setText("❌ Ошибка при загрузке палочек.");
+            textArea.setText("Ошибка при загрузке палочек.");
             e.printStackTrace();
         }
 

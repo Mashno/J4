@@ -31,29 +31,29 @@ public class CreateStickGUI extends JDialog {
     private void setupUI() {
         JPanel panel = new JPanel(new GridLayout(5, 2, 10, 10));
 
-        // Выбор древесины
+       
         JLabel woodLabel = new JLabel("Выберите древесину:");
         JComboBox<ComponentInfo> woodComboBox = new JComboBox<>();
         loadComponents("Wood", woodComboBox);
 
-        // Выбор сердцевины
+      
         JLabel coreLabel = new JLabel("Выберите сердцевину:");
         JComboBox<ComponentInfo> coreComboBox = new JComboBox<>();
         loadComponents("Core", coreComboBox);
 
-        // Ввод цены
+        
         JLabel priceLabel = new JLabel("Цена палочки:");
         JTextField priceField = new JTextField();
 
-        // Кнопка создания
-        JButton createButton = new JButton("✨ Создать палочку");
+       
+        JButton createButton = new JButton("Создать палочку");
 
         createButton.addActionListener(e -> {
             ComponentInfo selectedWood = (ComponentInfo) woodComboBox.getSelectedItem();
             ComponentInfo selectedCore = (ComponentInfo) coreComboBox.getSelectedItem();
 
             if (selectedWood == null || selectedCore == null) {
-                JOptionPane.showMessageDialog(this, "❗ Пожалуйста, выберите оба компонента.");
+                JOptionPane.showMessageDialog(this, "Пожалуйста, выберите оба компонента.");
                 return;
             }
 
@@ -66,35 +66,35 @@ public class CreateStickGUI extends JDialog {
                     throw new NumberFormatException();
                 }
             } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(this, "❌ Введите корректную цену (положительное число).");
+                JOptionPane.showMessageDialog(this, "Введите корректную цену (положительное число).");
                 return;
             }
 
             try {
                 connection.setAutoCommit(false);
 
-                // Уменьшаем количество древесины
+                
                 updateComponentAmount(selectedWood.id, selectedWood.type, -1);
-                // Уменьшаем количество сердцевины
+ 
                 updateComponentAmount(selectedCore.id, selectedCore.type, -1);
-                // Создаём палочку с указанной ценой
+        
                 createMagicStick(selectedWood.id, selectedCore.id, price);
 
                 connection.commit();
-                JOptionPane.showMessageDialog(this, "✨ Палочка успешно создана!");
+                JOptionPane.showMessageDialog(this, " Палочка успешно создана!");
 
-                // Опционально: обновляем списки
+          
                 woodComboBox.removeAllItems();
                 coreComboBox.removeAllItems();
                 loadComponents("Wood", woodComboBox);
                 loadComponents("Core", coreComboBox);
-                //priceField.setText("150.0");
+              
 
             } catch (SQLException ex) {
                 try {
                     connection.rollback();
                 } catch (SQLException ignored) {}
-                JOptionPane.showMessageDialog(this, "❌ Ошибка при создании палочки.");
+                JOptionPane.showMessageDialog(this, "Ошибка при создании палочки.");
                 ex.printStackTrace();
             } finally {
                 try {
@@ -103,7 +103,7 @@ public class CreateStickGUI extends JDialog {
             }
         });
 
-        // Добавляем элементы на форму
+     
         panel.add(woodLabel);
         panel.add(woodComboBox);
         panel.add(coreLabel);
@@ -117,7 +117,7 @@ public class CreateStickGUI extends JDialog {
         setVisible(true);
     }
 
-    // Загружает доступные компоненты (amount >= 1)
+    
     private void loadComponents(String table, JComboBox<ComponentInfo> comboBox) {
         String sql = "SELECT id, type FROM " + table + " WHERE amount >= 1 ORDER BY type";
 
@@ -131,12 +131,12 @@ public class CreateStickGUI extends JDialog {
             }
 
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "❌ Ошибка загрузки компонентов.");
+            JOptionPane.showMessageDialog(this, "Ошибка загрузки компонентов.");
             e.printStackTrace();
         }
     }
 
-    // Обновляет количество компонента
+    
     private void updateComponentAmount(int id, String table, int delta) throws SQLException {
         String sql = "UPDATE " + table + " SET amount = amount + ? WHERE id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -146,7 +146,7 @@ public class CreateStickGUI extends JDialog {
         }
     }
 
-    // Создаёт новую палочку
+    
     private void createMagicStick(int woodId, int coreId, double price) throws SQLException {
         String sql = "INSERT INTO MagicStick(wood_id, core_id, price) VALUES (?, ?, ?)";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -157,10 +157,10 @@ public class CreateStickGUI extends JDialog {
         }
     }
 
-    // Вспомогательный класс для хранения информации о компоненте
+   
     private static class ComponentInfo {
         int id;
-        String type; // Wood / Core
+        String type;
         String name;
 
         public ComponentInfo(int id, String type, String name) {

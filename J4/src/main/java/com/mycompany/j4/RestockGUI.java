@@ -36,7 +36,7 @@ public class RestockGUI extends JDialog {
     private void setupUI() {
         setLayout(new BorderLayout());
 
-        // Панель выбора компонента
+        
         JPanel inputPanel = new JPanel(new GridLayout(4, 2, 10, 10));
 
         JComboBox<String> componentTypeBox = new JComboBox<>(new String[]{"Древесина", "Сердцевина"});
@@ -44,14 +44,14 @@ public class RestockGUI extends JDialog {
         JTextField amountField = new JTextField("1");
         JButton addButton = new JButton("Добавить компонент");
 
-        // Загружаем данные при изменении типа
+        
         componentTypeBox.addActionListener(e -> loadComponents((String) componentTypeBox.getSelectedItem(), componentComboBox));
 
-        // Кнопка добавления
+        
         addButton.addActionListener(e -> {
             ComponentInfo selected = (ComponentInfo) componentComboBox.getSelectedItem();
             if (selected == null) {
-                JOptionPane.showMessageDialog(this, "❗ Пожалуйста, выберите компонент.");
+                JOptionPane.showMessageDialog(this, "Пожалуйста, выберите компонент.");
                 return;
             }
 
@@ -60,7 +60,7 @@ public class RestockGUI extends JDialog {
                 amount = Integer.parseInt(amountField.getText());
                 if (amount <= 0) throw new NumberFormatException();
             } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(this, "❌ Введите корректное положительное число.");
+                JOptionPane.showMessageDialog(this, "Введите корректное положительное число.");
                 return;
             }
 
@@ -77,17 +77,17 @@ public class RestockGUI extends JDialog {
         inputPanel.add(new JLabel(""));
         inputPanel.add(addButton);
 
-        // Таблица выбранных компонентов
+        
         String[] columnNames = {"ID", "Тип", "Название", "Количество"};
         tableModel = new DefaultTableModel(columnNames, 0);
         JTable itemTable = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(itemTable);
 
-        // Кнопка создания поставки
-        JButton createDeliveryButton = new JButton("📦 Создать поставку");
+        
+        JButton createDeliveryButton = new JButton("?Создать поставку");
         createDeliveryButton.addActionListener(e -> createDelivery());
 
-        // Компоновка
+        
         add(inputPanel, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
         add(createDeliveryButton, BorderLayout.SOUTH);
@@ -109,7 +109,7 @@ public class RestockGUI extends JDialog {
                 comboBox.addItem(new ComponentInfo(id, tableName, name));
             }
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "❌ Ошибка загрузки данных.");
+            JOptionPane.showMessageDialog(this, "Ошибка загрузки данных.");
             e.printStackTrace();
         }
     }
@@ -123,14 +123,14 @@ public class RestockGUI extends JDialog {
 
     private void createDelivery() {
         if (deliveryItems.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "❗ Список компонентов пуст.");
+            JOptionPane.showMessageDialog(this, "Список компонентов пуст.");
             return;
         }
 
         try {
             connection.setAutoCommit(false);
 
-            // Добавляем поставку
+            
             String insertDelivery = "INSERT INTO Delivery(delivery_date) VALUES (?) RETURNING id";
             int deliveryId;
             try (PreparedStatement pstmt = connection.prepareStatement(insertDelivery)) {
@@ -140,12 +140,12 @@ public class RestockGUI extends JDialog {
                 deliveryId = rs.getInt("id");
             }
 
-            // Добавляем детали поставки
+            
             String insertDetail = "INSERT INTO DeliveryDetails(delivery_id, component_type, component_id, amount) VALUES (?, ?, ?, ?)";
             try (PreparedStatement pstmt = connection.prepareStatement(insertDetail)) {
                 for (ComponentItem item : deliveryItems) {
                     pstmt.setInt(1, deliveryId);
-                    pstmt.setString(2, item.type); // Wood/Core
+                    pstmt.setString(2, item.type); 
                     pstmt.setInt(3, item.id);
                     pstmt.setInt(4, item.amount);
                     pstmt.addBatch();
@@ -153,7 +153,7 @@ public class RestockGUI extends JDialog {
                 pstmt.executeBatch();
             }
 
-            // Обновляем остатки на складе
+            
             String updateStockSql;
             for (ComponentItem item : deliveryItems) {
                 if (item.type.equals("Wood")) {
@@ -169,7 +169,7 @@ public class RestockGUI extends JDialog {
             }
 
             connection.commit();
-            JOptionPane.showMessageDialog(this, "✅ Поставка успешно создана!");
+            JOptionPane.showMessageDialog(this, "Поставка успешно создана!");
             deliveryItems.clear();
             updateTable();
 
@@ -179,7 +179,7 @@ public class RestockGUI extends JDialog {
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
-            JOptionPane.showMessageDialog(this, "❌ Ошибка при создании поставки.");
+            JOptionPane.showMessageDialog(this, "Ошибка при создании поставки.");
             e.printStackTrace();
         } finally {
             try {
@@ -188,11 +188,11 @@ public class RestockGUI extends JDialog {
         }
     }
 
-    // Вспомогательные классы
+    
 
     private static class ComponentInfo {
         int id;
-        String type; // Wood/Core
+        String type; 
         String name;
 
         public ComponentInfo(int id, String type, String name) {
@@ -209,7 +209,7 @@ public class RestockGUI extends JDialog {
 
     private static class ComponentItem {
         int id;
-        String type; // Wood/Core
+        String type; 
         String name;
         int amount;
 

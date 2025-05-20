@@ -38,37 +38,37 @@ public class SellStickGUI extends JDialog {
         JLabel buyerLabel = new JLabel("Имя покупателя:");
         JTextField buyerField = new JTextField();
 
-        JButton sellButton = new JButton("💰 Совершить покупку");
+        JButton sellButton = new JButton("?Совершить покупку");
 
         sellButton.addActionListener(e -> {
             StickInfo selectedStick = (StickInfo) stickComboBox.getSelectedItem();
             String buyerName = buyerField.getText().trim();
 
             if (selectedStick == null) {
-                JOptionPane.showMessageDialog(this, "❗ Пожалуйста, выберите палочку.");
+                JOptionPane.showMessageDialog(this, "Пожалуйста, выберите палочку.");
                 return;
             }
 
             if (buyerName.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "❗ Введите имя покупателя.");
+                JOptionPane.showMessageDialog(this, "Введите имя покупателя.");
                 return;
             }
 
             try {
                 connection.setAutoCommit(false);
 
-                // Обновляем статус и имя покупателя
+                
                 updateStickStatus(selectedStick.id, buyerName);
 
                 connection.commit();
-                JOptionPane.showMessageDialog(this, "💰 Палочка успешно продана!");
+                JOptionPane.showMessageDialog(this, "?Палочка успешно продана!");
                 dispose();
 
             } catch (SQLException ex) {
                 try {
                     connection.rollback();
                 } catch (SQLException ignored) {}
-                JOptionPane.showMessageDialog(this, "❌ Ошибка при продаже палочки.");
+                JOptionPane.showMessageDialog(this, "Ошибка при продаже палочки.");
                 ex.printStackTrace();
             } finally {
                 try {
@@ -88,7 +88,7 @@ public class SellStickGUI extends JDialog {
         setVisible(true);
     }
 
-    // Загружаем доступные палочки (status = 'available')
+    
     private void loadAvailableSticks(JComboBox<StickInfo> comboBox) {
         String sql = """
             SELECT m.id, w.type AS wood, c.type AS core, m.price
@@ -115,12 +115,12 @@ public class SellStickGUI extends JDialog {
             }
 
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "❌ Ошибка загрузки палочек.");
+            JOptionPane.showMessageDialog(this, "Ошибка загрузки палочек.");
             e.printStackTrace();
         }
     }
 
-    // Обновление статуса и имени покупателя
+    
     private void updateStickStatus(int stickId, String buyerName) throws SQLException {
         String sql = "UPDATE MagicStick SET status = 'sold', buyer = ? WHERE id = ?";
         try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
@@ -130,7 +130,7 @@ public class SellStickGUI extends JDialog {
         }
     }
 
-    // Вспомогательный класс для хранения информации о палочке
+    
     private static class StickInfo {
         int id;
         String display;

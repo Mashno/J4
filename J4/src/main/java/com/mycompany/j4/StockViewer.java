@@ -21,7 +21,7 @@ public class StockViewer extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        // Модель таблицы
+        
         DefaultTableModel tableModel = new DefaultTableModel();
         tableModel.addColumn("Тип");
         tableModel.addColumn("Название");
@@ -30,10 +30,10 @@ public class StockViewer extends JFrame {
         JTable table = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(table);
 
-        // Загружаем данные
+        
         loadStockData(tableModel);
 
-        // Добавляем всё на форму
+        
         add(scrollPane, BorderLayout.CENTER);
         setVisible(true);
     }
@@ -42,7 +42,7 @@ public class StockViewer extends JFrame {
         try (Connection conn = DatabaseConnection.getConnection();
              Statement stmt = conn.createStatement()) {
 
-            // Загружаем древесину
+            
             ResultSet woodRs = stmt.executeQuery("SELECT type, amount FROM Wood");
             while (woodRs.next()) {
                 model.addRow(new Object[]{
@@ -52,7 +52,7 @@ public class StockViewer extends JFrame {
                 });
             }
 
-            // Загружаем сердцевину
+            
             ResultSet coreRs = stmt.executeQuery("SELECT type, amount FROM Core");
             while (coreRs.next()) {
                 model.addRow(new Object[]{
@@ -68,7 +68,7 @@ public class StockViewer extends JFrame {
         }
     }
 
-    // Для тестирования
+    
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new StockViewer());
     }

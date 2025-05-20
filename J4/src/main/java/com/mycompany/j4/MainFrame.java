@@ -21,7 +21,7 @@ public class MainFrame extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        // Панель с кнопками
+        
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
@@ -32,7 +32,7 @@ public class MainFrame extends JFrame {
         JButton btnViewSticks = new JButton("5. Просмотреть созданные палочки");
         JButton btnClearData = new JButton("6. Обнулить данные");
 
-        // Добавляем кнопки
+        
         panel.add(btnRestock);
         panel.add(btnCheckStock);
         panel.add(btnCreateStick);
@@ -40,7 +40,7 @@ public class MainFrame extends JFrame {
         panel.add(btnViewSticks);
         panel.add(btnClearData);
 
-        // Обработчики событий
+        
         btnRestock.addActionListener(e -> new RestockGUI(MainFrame.this).setVisible(true));
 
         btnCheckStock.addActionListener(e -> new StockViewer().setVisible(true));
