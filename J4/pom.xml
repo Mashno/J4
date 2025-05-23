@@ -33,7 +33,7 @@
                         <configuration>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>com.mycompany.java_laboratory_3.Java_laboratory_3</mainClass>
+                                    <mainClass>com.mycompany.j4.J4</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>
